@@ -26,7 +26,7 @@ bloodyTrail = [
 
 		titlesStr = ''
 		for title, i in titles
-			titlesStr += title.innerHTML + '\n'
+			titlesStr += i + ') ' + title.innerHTML + '\n'
 
 		step null, titlesStr
 
