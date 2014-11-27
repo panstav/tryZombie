@@ -13,7 +13,7 @@ bloodyTrail = [
 		console.log 'Going towards smell\n'
 
 		onTheRun = Date.now()
-		zombie.visit 'http://www.yadaim2.co.il/index.asp', (err) ->
+		zombie.visit 'https://news.ycombinator.com/news', (err) ->
 			if err then step err
 			else step null, zombie.document, onTheRun
 
@@ -22,10 +22,13 @@ bloodyTrail = [
 
 		console.log('\nArrived at ' + (Date.now() - onTheRun)/1000 + 'sec\n')
 
-		rot = doc.querySelectorAll('#fb-root')
-		rotHTML = rot[0].outerHTML
+		titles = doc.querySelectorAll('td.title a')
 
-		step null, rotHTML
+		titlesStr = ''
+		for title, i in titles
+			titlesStr += title.innerHTML + '\n'
+
+		step null, titlesStr
 
 
 	(results, step) ->

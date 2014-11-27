@@ -14,7 +14,7 @@ bloodyTrail = [
     var onTheRun;
     console.log('Going towards smell\n');
     onTheRun = Date.now();
-    return zombie.visit('http://www.yadaim2.co.il/index.asp', function(err) {
+    return zombie.visit('https://news.ycombinator.com/news', function(err) {
       if (err) {
         return step(err);
       } else {
@@ -22,11 +22,15 @@ bloodyTrail = [
       }
     });
   }, function(doc, onTheRun, step) {
-    var rot, rotHTML;
+    var i, title, titles, titlesStr, _i, _len;
     console.log('\nArrived at ' + (Date.now() - onTheRun) / 1000 + 'sec\n');
-    rot = doc.querySelectorAll('#fb-root');
-    rotHTML = rot[0].outerHTML;
-    return step(null, rotHTML);
+    titles = doc.querySelectorAll('td.title a');
+    titlesStr = '';
+    for (i = _i = 0, _len = titles.length; _i < _len; i = ++_i) {
+      title = titles[i];
+      titlesStr += title.innerHTML + '\n';
+    }
+    return step(null, titlesStr);
   }, function(results, step) {
     console.log('Eating.\n');
     return step(null, results);
