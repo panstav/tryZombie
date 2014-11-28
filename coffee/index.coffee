@@ -22,14 +22,21 @@ bloodyTrail = [
 
 		console.log('\nArrived at ' + (Date.now() - onTheRun)/1000 + 'sec\n')
 
-		titles = doc.querySelectorAll('td.title a')
+		news = []
 
-		titlesStr = ''
-		for title, i in titles
-			titlesStr += i + ') ' + title.innerHTML + '\n'
+		for title, i in doc.querySelectorAll('td.title a')
+			unless title.innerHTML is 'More' then news[i] =
+				title: title.innerHTML
+				link: title.href
 
-		step null, titlesStr
+		for points, i in doc.querySelectorAll('td.subtext span[id^="score"]')
+			news[i].points = points.innerHTML.split(' ')[0]
 
+		for host, i in doc.querySelectorAll('td.title .comhead')
+			host = host.innerHTML.trim().replace(/\(|\)/g, '')
+			news[i].host = host.charAt(0).toUpperCase() + host.slice(1)
+
+		step null, news
 
 	(results, step) ->
 
@@ -42,4 +49,9 @@ async.waterfall bloodyTrail, (error, results) ->
 	if error
 		console.log 'Async error:', error
 	else
-		console.log 'Digestion results:\n', results
+		console.log 'Digestion results:\n'
+
+		results.sort (a, b) -> b - a
+
+		for feed in results
+			console.log(feed.host + ': \n' + feed.title + ' // +' + feed.points + '\n' + feed.link + '\n')
